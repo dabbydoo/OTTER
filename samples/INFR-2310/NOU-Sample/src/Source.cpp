@@ -20,6 +20,8 @@ Really simple demo showing off entity creation + model rendering.
 
 using namespace nou;
 
+
+
 int main()
 {
 	//Initialize our window.
@@ -32,6 +34,8 @@ int main()
 	auto f_texLit = std::make_unique<Shader>("shaders/texturedlit.frag", GL_FRAGMENT_SHADER);
 
 	auto prog_texLit = ShaderProgram({ v_texLit.get(), f_texLit.get() });
+
+	
 
 	//Manually specify data for a single triangle.
 	//This lets us quickly test rendering without relying on a mesh loader.
@@ -116,6 +120,7 @@ int main()
 	//delta time jump during resource loading).
 	App::Tick();
 
+	//Main loop
 	while (!App::IsClosing() && !Input::GetKey(GLFW_KEY_ESCAPE))
 	{
 		App::FrameStart();

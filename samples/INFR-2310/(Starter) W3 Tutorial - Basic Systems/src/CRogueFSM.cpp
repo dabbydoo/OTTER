@@ -1,22 +1,14 @@
-/*
-NOU Framework - Created for INFR 2310 at Ontario Tech.
-(c) Samantha Stahlke 2020
-
-CKnightFSM.h
-Simple FSM component for our animated knight.
-*/
-
-#include "CKnightFSM.h"
+#include "CRogueFSM.h"
 #include "Sprites/CSpriteAnimator.h"
 
 namespace nou
 {
 	//String labels for animations.
-	const std::string CKnightFSM::idleClip = "idle";
-	const std::string CKnightFSM::runClip = "walk";
-	const std::string CKnightFSM::attackClip = "attack";
+	const std::string CRogueFSM::idleClip = "idle";
+	const std::string CRogueFSM::runClip = "walk";
+	const std::string CRogueFSM::attackClip = "attack";
 
-	CKnightFSM::CKnightFSM(Entity& owner)
+	CRogueFSM::CRogueFSM(Entity& owner)
 	{
 		m_owner = &owner;
 		m_state = AnimState::IDLE;
@@ -24,7 +16,7 @@ namespace nou
 		SetState(m_state);
 	}
 
-	void CKnightFSM::SetState(CKnightFSM::AnimState state)
+	void CRogueFSM::SetState(CRogueFSM::AnimState state)
 	{
 		m_state = state;
 
@@ -51,7 +43,7 @@ namespace nou
 	}
 
 
-	void CKnightFSM::Update()
+	void CRogueFSM::Update()
 	{
 		auto& animator = m_owner->Get<CSpriteAnimator>();
 
@@ -59,27 +51,27 @@ namespace nou
 		switch (m_state)
 		{
 		case AnimState::IDLE:
-			
-			if (GetVariable("moving"))
+
+			if (GetVariable("movingRogue"))
 				SetState(AnimState::RUN);
-			if (GetTrigger("attacking"))
+			if (GetTrigger("attackingRogue"))
 				SetState(AnimState::ATTACK);
 
 			break;
 		case AnimState::RUN:
 
-			if (!GetVariable("moving"))
+			if (!GetVariable("movingRogue"))
 				SetState(AnimState::IDLE);
-			if (GetTrigger("attacking"))
+			if (GetTrigger("attackingRogue"))
 				SetState(AnimState::ATTACK);
 
 			break;
 		default:
-	
+
 			if (animator.IsDone())
 				SetState(AnimState::IDLE);
 
 			break;
 		}
-	}	
+	}
 }
