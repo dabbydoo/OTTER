@@ -57,6 +57,13 @@ bool Shader::LoadShaderPart(const char* source, GLenum type)
 		glDeleteShader(handle);
 		handle = 0;
 	}
+
+	switch (type) {
+	case GL_VERTEX_SHADER: _vs = handle; break;
+	case GL_FRAGMENT_SHADER: _fs = handle; break;
+	default: LOG_WARN("Not implemented"); break;
+	}
+	return status != GL_FALSE;
 }
 
 bool Shader::LoadShaderPartFromFile(const char* path, GLenum type) {
@@ -71,6 +78,40 @@ bool Shader::LoadShaderPartFromFile(const char* path, GLenum type) {
 bool Shader::Link()
 {
 	// Todo: Implement
+	LOG_ASSERT(_vs != 0 && _fs != 0, "Must attach both a vertex and fragment shader!");
+	// Attach our two shaders
+	glAttachShader(_handle, _vs);
+	glAttachShader(_handle, _fs);
+	// Perform linking
+	glLinkProgram(_handle);
+
+	// Remove shader parts to save space (we can do this since we only needed the shader parts to compile an actual shader program)
+	glDetachShader(_handle, _vs);
+	glDeleteShader(_vs);
+	glDetachShader(_handle, _fs);
+	glDeleteShader(_fs);
+
+	GLint status = 0;
+	glGetProgramiv(_handle, GL_LINK_STATUS, &status);
+
+	if (status == GL_FALSE)
+	{
+		// Get the length of the log
+		GLint length = 0;
+		glGetProgramiv(_handle, GL_INFO_LOG_LENGTH, &length);
+		if (length > 0) {
+			// Read the log from openGL
+			char* log = new char[length];
+			glGetProgramInfoLog(_handle, length, &length,
+				log);
+			LOG_ERROR("Shader failed to link:\n{}", log);
+			delete[] log;
+		}
+		else {
+			LOG_ERROR("Shader failed to link for an unknown reason!");
+		}
+	}
+	return status != GL_FALSE;
 }
 
 void Shader::Bind() {
