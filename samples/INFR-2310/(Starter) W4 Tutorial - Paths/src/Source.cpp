@@ -42,7 +42,10 @@ template<typename T>
 T Catmull(const T& p0, const T& p1, const T& p2, const T& p3, float t)
 {
 	//TODO: Implement Catmull-Rom interpolation.
-	return p0;
+
+	return 0.5f * (2.f * p1 + t *(-p0 + p2)
+		+ t * t * (2.f * p0 -5.f * p1 + 4.f * p2 - p3)
+		+ t * t * t * (-p0 + 3.f * p1 - 3.f * p2 + p3));
 }
 
 //TODO (For part of this week's task): Implement your Bezier function.
@@ -51,11 +54,25 @@ T Catmull(const T& p0, const T& p1, const T& p2, const T& p3, float t)
 //It is important you follow this logic for treating your points
 //for the utility drawing function to work for you.
 //(Unless you'd like to modify the utility function yourself, that is :P).
+
 template<typename T>
 T Bezier(const T& p0, const T& p1, const T& p2, const T& p3, float t)
 {
-	return p0;
+	return LERP(Bezier2(p0, p1, p2, t), Bezier2(p1, p2, p3, t), t);
 }
+
+template<typename T>
+T Bezier2(const T& p0, const T& p1, const T& p2, float t)
+{
+	return LERP(Bezier3(p0, p1, t), Bezier3(p1, p2, t), t);
+}
+
+template<typename T>
+T Bezier3(const T& p0, const T& p1, float t)
+{
+	return  LERP(p0, p1, t);
+}
+
 
 int main()
 {
@@ -65,7 +82,7 @@ int main()
 	App::InitImgui();
 
 	LoadDefaultResources();
-
+	
 	PathSampler::Bezier = Bezier<glm::vec3>;
 	PathSampler::Catmull = Catmull<glm::vec3>;
 
@@ -133,7 +150,37 @@ int main()
 		ImGui::Begin("Waypoints", &listPanel, ImVec2(300, 200));
 
 		//TODO: How do we add a waypoint?
+		if (ImGui::Button("Add"))
+		{
+			points.push_back(Entity::Allocate());
+			auto& p = points.back();
+			p->Add<CMeshRenderer>(*p, *boxMesh, *unselectedMat);
+			p->transform.m_scale = glm::vec3(0.1f, 0.1f, 0.1f);
+
+			if (points.size() > 1)
+			{
+				auto& lastP = points[points.size() - 2];
+				p->transform.m_pos = lastP->transform.m_pos + glm::vec3(0.2f, 0.0f, 00.0f);
+			}
+		}
+
 		//TODO: How do we remove a waypoint?
+		if (ImGui::Button("Remove") && points.size() > 0)
+		{
+			points.pop_back();
+		}
+
+		if (ImGui::Button("Bezier"))
+		{
+			duckEntity.Get<CPathAnimator>().SetMode(PathSampler::PathMode::BEZIER);
+			sampler.m_mode = PathSampler::PathMode::BEZIER;
+		}
+		
+		if (ImGui::Button("Catmull"))
+		{
+			duckEntity.Get<CPathAnimator>().SetMode(PathSampler::PathMode::CATMULL);
+			sampler.m_mode = PathSampler::PathMode::CATMULL;
+		}
 
 		//Interface for selecting a waypoint.
 		static size_t pointSelected = 0;
@@ -168,6 +215,12 @@ int main()
 			ImGui::Begin("Point Coordinates", &transformPanel, ImVec2(300, 100));
 
 			//TODO: How will we update our point's coordinates?
+			/*ImGui::InputFloat("X", &(transform.m_pos.x));
+			ImGui::InputFloat("Y", &(transform.m_pos.y));
+			ImGui::InputFloat("Z", &(transform.m_pos.z));*/
+			ImGui::SliderFloat("x", &(transform.m_pos.x), -2.f, 2.f);
+			ImGui::SliderFloat("y", &(transform.m_pos.y), -2.f, 2.f);
+			ImGui::SliderFloat("z", &(transform.m_pos.z), -2.f, 2.f);
 
 			ImGui::End();
 		}

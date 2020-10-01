@@ -145,9 +145,9 @@ int main() {
 	glDebugMessageCallback(GlDebugMessage, nullptr);
 
 	static const GLfloat points[] = {
-		-0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f,
-		-0.5f, 0.5f, 0.5f
+		-0.9f, -0.5f, 0.5f,
+		-0.9f, 0.5f, 0.5f,
+		-0.5f, -0.5f, 0.5f
 	};
 
 	static const GLfloat colors[] = {
@@ -195,9 +195,9 @@ int main() {
 
 	static const float interleaved[] = {
 		// X	Y	  Z		R	  G		B
-		0.7f, -0.2f, 0.5f, 0.0f, 0.0f, 0.0f,
-		0.7f, 0.7f, 0.5f, 0.3f, 0.2f, 0.5f,
-		-0.2f, 0.7f, 0.5f, 1.0f, 1.0f, 0.0f,
+		0.0f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.5f, 0.5f, 0.3f, 0.2f, 0.5f,
+		0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f,
 		0.7f, 1.0f, 0.5f, 1.0f, 1.0f, 1.0f
 	};
 	VertexBuffer* interleaved_vbo = new VertexBuffer();
@@ -205,7 +205,7 @@ int main() {
 	
 	static const uint16_t indices[] = {
 		0, 1, 2,
-		1, 3, 2
+		//1, 2, 3
 	};
 	IndexBuffer* interleaved_ibo = new IndexBuffer();
 	interleaved_ibo->LoadData(indices, 3 * 2);
