@@ -111,6 +111,7 @@ int main()
 
 	App::Tick();
 
+	bool bezierMode = false;
 	//This is our main loop.
 	while (!App::IsClosing() && !Input::GetKey(GLFW_KEY_ESCAPE))
 	{
@@ -171,16 +172,23 @@ int main()
 		}
 
 		if (ImGui::Button("Bezier"))
-		{
+		{	
+			bezierMode = true;
 			duckEntity.Get<CPathAnimator>().SetMode(PathSampler::PathMode::BEZIER);
 			sampler.m_mode = PathSampler::PathMode::BEZIER;
 		}
-		
+
 		if (ImGui::Button("Catmull"))
 		{
+			bezierMode = false;
 			duckEntity.Get<CPathAnimator>().SetMode(PathSampler::PathMode::CATMULL);
 			sampler.m_mode = PathSampler::PathMode::CATMULL;
 		}
+
+		if(bezierMode)
+			ImGui::Text("BEZIER MODE");
+		else
+			ImGui::Text("CATMULL MODE");
 
 		//Interface for selecting a waypoint.
 		static size_t pointSelected = 0;
