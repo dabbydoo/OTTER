@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <cstdint>
 #include <vector>
+<<<<<<< HEAD
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include <memory>
@@ -11,6 +12,13 @@
 
 //class IndexBuffer;
 //class VertexBuffer;
+=======
+
+// We can declare the classes for IndexBuffer and VertexBuffer here, since we don't need their full definitions in the .h file
+
+class IndexBuffer;
+class VertexBuffer;
+>>>>>>> master
 
 /// <summary>
 /// This structure will represent the parameters passed to the glVertexAttribPointer commands
@@ -52,6 +60,7 @@ struct BufferAttribute
 class VertexArrayObject final
 {
 public:
+<<<<<<< HEAD
 	typedef std::shared_ptr<VertexArrayObject> sptr;
 
 	static inline sptr Create() {
@@ -59,6 +68,8 @@ public:
 	}
 
 public:
+=======
+>>>>>>> master
 	// We'll disallow moving and copying, since we want to manually control when the destructor is called
 	// We'll use these classes via pointers
 	VertexArrayObject(const VertexArrayObject& other) = delete;
@@ -78,13 +89,21 @@ public:
 	/// Sets the index buffer for this VAO, note that for now, this will not delete the buffer when the VAO is deleted, more on that later
 	/// </summary>
 	/// <param name="ibo">The index buffer to bind to this VAO</param>
+<<<<<<< HEAD
 	void SetIndexBuffer(const IndexBuffer::sptr& ibo);
+=======
+	void SetIndexBuffer(IndexBuffer* ibo);
+>>>>>>> master
 	/// <summary>
 	/// Adds a vertex buffer to this VAO, with the specified attributes
 	/// </summary>
 	/// <param name="buffer">The buffer to add (note, does not take ownership, you will still need to delete later)</param>
 	/// <param name="attributes">A list of vertex attributes that will be fed by this buffer</param>
+<<<<<<< HEAD
 	void AddVertexBuffer(const VertexBuffer::sptr& buffer, const std::vector<BufferAttribute>& attributes);
+=======
+	void AddVertexBuffer(VertexBuffer* buffer, const std::vector<BufferAttribute>& attributes);
+>>>>>>> master
 
 	/// <summary>
 	/// Binds this VAO as the source of data for draw operations
@@ -104,12 +123,20 @@ protected:
 	// Helper structure to store a buffer and the attributes
 	struct VertexBufferBinding
 	{
+<<<<<<< HEAD
 		VertexBuffer::sptr Buffer;
+=======
+		VertexBuffer* Buffer;
+>>>>>>> master
 		std::vector<BufferAttribute> Attributes;
 	};
 	
 	// The index buffer bound to this VAO
+<<<<<<< HEAD
 	IndexBuffer::sptr _indexBuffer;
+=======
+	IndexBuffer* _indexBuffer;
+>>>>>>> master
 	// The vertex buffers bound to this VAO
 	std::vector<VertexBufferBinding> _vertexBuffers;
 

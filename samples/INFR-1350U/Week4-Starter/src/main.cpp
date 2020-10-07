@@ -108,12 +108,23 @@ int main() {
 		0.0f, 0.0f, 1.0f
 	};
 
+<<<<<<< HEAD
 	VertexBuffer::sptr posVbo = VertexBuffer::Create();
 	posVbo->LoadData(points, 9);
 	VertexBuffer::sptr color_vbo = VertexBuffer::Create();
 	color_vbo->LoadData(colors, 9);
 
 	VertexArrayObject::sptr vao = VertexArrayObject::Create();
+=======
+	//VBO - Vertex buffer object
+	VertexBuffer* posVbo = new VertexBuffer();
+	posVbo->LoadData(points, 9);
+
+	VertexBuffer* color_vbo = new VertexBuffer();
+	color_vbo->LoadData(colors, 9);
+
+	VertexArrayObject* vao = new VertexArrayObject();
+>>>>>>> master
 	vao->AddVertexBuffer(posVbo, {
 		BufferAttribute(0, 3, GL_FLOAT, false, 0, NULL)
 	});
@@ -129,18 +140,30 @@ int main() {
 		 0.5f,  1.0f, 0.0f,  1.0f, 1.0f, 1.0f
 	};
 
+<<<<<<< HEAD
 	VertexBuffer::sptr interleaved_vbo = VertexBuffer::Create();
+=======
+	VertexBuffer* interleaved_vbo = new VertexBuffer();
+>>>>>>> master
 	interleaved_vbo->LoadData(interleaved, 6 * 4);
 
 	static const uint16_t indices[] = {
 		0, 1, 2,
 		1, 3, 2
 	};
+<<<<<<< HEAD
 	IndexBuffer::sptr interleaved_ibo = IndexBuffer::Create();
 	interleaved_ibo->LoadData(indices, 3 * 2);
 
 	size_t stride = sizeof(float) * 6;
 	VertexArrayObject::sptr vao2 = VertexArrayObject::Create();
+=======
+	IndexBuffer* interleaved_ibo = new IndexBuffer();
+	interleaved_ibo->LoadData(indices, 3 * 2);
+
+	size_t stride = sizeof(float) * 6;
+	VertexArrayObject* vao2 = new VertexArrayObject();
+>>>>>>> master
 	vao2->AddVertexBuffer(interleaved_vbo, {
 		BufferAttribute(0, 3, GL_FLOAT, false, stride, 0),
 		BufferAttribute(1, 3, GL_FLOAT, false, stride, sizeof(float) * 3),
@@ -148,7 +171,11 @@ int main() {
 	vao2->SetIndexBuffer(interleaved_ibo);
 
 	// Load our shaders
+<<<<<<< HEAD
 	Shader::sptr shader = Shader::Create();
+=======
+	Shader* shader = new Shader();
+>>>>>>> master
 	shader->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
 	shader->LoadShaderPartFromFile("shaders/frag_shader.glsl", GL_FRAGMENT_SHADER);
 	shader->Link();
@@ -158,16 +185,24 @@ int main() {
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+<<<<<<< HEAD
 	glm::mat4 transform = glm::mat4(1.0f);
 	glm::mat4 transform2 = glm::mat4(1.0f);
+=======
+	GLint xTransformLoc = glGetUniformLocation(shader->GetHandle(), "u_ModelViewProjection");
+	glm::mat4 transform = glm::mat4(1.0f);
+>>>>>>> master
 
 	// Our high-precision timer
 	double lastFrame = glfwGetTime();
 
+<<<<<<< HEAD
 	Camera::sptr camera = Camera::Create();
 	camera->SetPosition(glm::vec3(0, 1, -1));
 	camera->LookAt(glm::vec3(0.0f));
 
+=======
+>>>>>>> master
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -177,20 +212,30 @@ int main() {
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 0, 1));
 
+<<<<<<< HEAD
 		transform2 = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.0f, glm::sin(static_cast<float>(thisFrame))));
 
 
+=======
+>>>>>>> master
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader->Bind();
+<<<<<<< HEAD
 		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform);
+=======
+		glProgramUniformMatrix4fv(shader->GetHandle(), xTransformLoc, 1, false, glm::value_ptr(transform));
+>>>>>>> master
 
 		vao->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		vao->UnBind();
 
+<<<<<<< HEAD
 		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform2);
+=======
+>>>>>>> master
 		vao2->Bind();
 		glDrawElements(GL_TRIANGLES, interleaved_ibo->GetElementCount(), interleaved_ibo->GetElementType(), nullptr);
 		vao->UnBind();
@@ -198,6 +243,16 @@ int main() {
 		glfwSwapBuffers(window);
 	}
 
+<<<<<<< HEAD
+=======
+	delete shader;
+	delete vao;
+	delete vao2;
+	delete interleaved_vbo;
+	delete interleaved_ibo;
+	delete posVbo;
+	delete color_vbo;
+>>>>>>> master
 
 	// Clean up the toolkit logger so we don't leak memory
 	Logger::Uninitialize();

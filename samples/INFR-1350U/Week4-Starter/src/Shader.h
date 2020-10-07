@@ -1,4 +1,5 @@
 #pragma once
+<<<<<<< HEAD
 #include <glad/glad.h>
 #include <memory>
 #include <string> // for std::string
@@ -6,6 +7,10 @@
 #include <GLM/glm.hpp> // for our GLM types
 #include <GLM/gtc/type_ptr.hpp> // for glm::value_ptr
 #include "Logging.h" // for the logging functions
+=======
+#include <string>
+#include <glad/glad.h>
+>>>>>>> master
 
 /// <summary>
 /// This class will wrap around an OpenGL shader program
@@ -13,6 +18,7 @@
 class Shader final
 {
 public:
+<<<<<<< HEAD
 	typedef std::shared_ptr<Shader> sptr;
 
 	static inline sptr Create() {
@@ -20,6 +26,8 @@ public:
 	}
 
 public:
+=======
+>>>>>>> master
 	// We'll disallow moving and copying, since we want to manually control when the destructor is called
 	// We'll use these classes via pointers
 	Shader(const Shader& other) = delete;
@@ -71,6 +79,7 @@ public:
 	/// </summary>
 	GLuint GetHandle() const { return _handle; }
 
+<<<<<<< HEAD
 	template <typename T>
 	void SetUniform(const std::string& name, const T& value) {
 		int location = __GetUniformLocation(name);
@@ -107,14 +116,19 @@ public:
 	void SetUniform(int location, const glm::bvec3* value, int count = 1);
 	void SetUniform(int location, const glm::bvec4* value, int count = 1);
 
+=======
+>>>>>>> master
 	
 protected:
 	GLuint _vs;
 	GLuint _fs;
 	
 	GLuint _handle;
+<<<<<<< HEAD
 
 	std::unordered_map<std::string, int> _uniformLocs;
 	int __GetUniformLocation(const std::string& name);
 
+=======
+>>>>>>> master
 };

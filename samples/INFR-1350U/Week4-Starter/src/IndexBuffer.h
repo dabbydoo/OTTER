@@ -2,7 +2,10 @@
 #include "IBuffer.h"
 #include <cstdint>
 #include <stdexcept>
+<<<<<<< HEAD
 #include <memory>
+=======
+>>>>>>> master
 
 /// <summary>
 /// The index buffer will store indices for rendering (uint8_t, uint16_t and uint32_t)
@@ -10,9 +13,12 @@
 class IndexBuffer : public IBuffer
 {
 public:
+<<<<<<< HEAD
 	typedef std::shared_ptr<IndexBuffer> sptr;
 
 public:
+=======
+>>>>>>> master
 	/// <summary>
 	/// Creates a new index buffer, with the given usage. Data will still need to be uploaded before it can be used
 	/// </summary>
@@ -20,9 +26,12 @@ public:
 	IndexBuffer(GLenum usage = GL_STATIC_DRAW) : 
 		IBuffer(GL_ELEMENT_ARRAY_BUFFER, usage), _elementType(GL_NONE) { }
 
+<<<<<<< HEAD
 	static inline sptr Create(GLenum usage = GL_STATIC_DRAW) {
 		return std::make_shared<IndexBuffer>(usage);
 	}
+=======
+>>>>>>> master
 	// We'll override the LoadData to force users to use our overload that takes in the element type as well
 	inline void LoadData(const void* data, size_t elementSize, size_t elementCount) override {
 		throw std::runtime_error("Must use the templated overload, or the LoadData that specifies the element type");

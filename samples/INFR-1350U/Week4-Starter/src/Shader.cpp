@@ -122,6 +122,7 @@ void Shader::Bind() {
 void Shader::UnBind() {
 	glUseProgram(0);
 }
+<<<<<<< HEAD
 
 void Shader::SetUniformMatrix(int location, const glm::mat3* value, int count, bool transposed) {
 	glProgramUniformMatrix3fv(_handle, location, count, transposed, glm::value_ptr(*value));
@@ -187,3 +188,5 @@ int Shader::__GetUniformLocation(const std::string& name) {
 
 	return result;
 }
+=======
+>>>>>>> master
