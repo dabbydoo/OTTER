@@ -30,9 +30,11 @@ namespace nou
 		void Update(float deltaTime);
 
 		//TODO: Add functions to set frames and in-between frame time.
+		void SetFrames(const std::vector<std::unique_ptr<Mesh>>& frames);
+		void SetFrameTime(float frameTime);
 
 		protected:
-
+			
 		Entity* m_owner;
 
 		class AnimData
@@ -41,10 +43,12 @@ namespace nou
 
 			//TODO: You'll need to define a way to store and manage full
 			//animation clips for the exercise.
-			const Mesh* frame0;
-			const Mesh* frame1;
+			/*const Mesh* frame0;
+			const Mesh* frame1;*/
+			std::vector<const Mesh*> frames;
 			//The time inbetween frames.
 			float frameTime;
+			int frameIndex = 0;
 
 			AnimData();
 			~AnimData() = default;
@@ -52,6 +56,8 @@ namespace nou
 
 		std::unique_ptr<AnimData> m_data;
 
+		
+		
 		float m_timer;
 		bool m_forwards;
 	};
