@@ -17,6 +17,7 @@ Week 9 Tutorial Sample - Created for INFR 2310 at Ontario Tech.
 #include "Logging.h"
 #include "GLM/gtx/matrix_decompose.hpp"
 #include "imgui.h"
+#include <iostream>
 
 #include <memory>
 
@@ -54,14 +55,22 @@ int main()
 	//Load a basic box mesh for drawing our skeleton.
 	auto boxMesh = std::make_unique<Mesh>();
 	GLTF::LoadMesh("models/box/BoxTextured.gltf", *boxMesh);
+	  
+	////Load our skinned boy mesh (in base pose).
+	//auto boiMesh = std::make_unique<SkinnedMesh>();
+	//GLTF::LoadSkinnedMesh("models/boi/Base.gltf", *boiMesh);
+
+	////Load our animation.
+	//auto walkAnim = std::make_unique<SkeletalAnim>();
+	//GLTF::LoadAnimation("models/boi/Walk.gltf", *(walkAnim.get()));
 
 	//Load our skinned boy mesh (in base pose).
 	auto boiMesh = std::make_unique<SkinnedMesh>();
-	GLTF::LoadSkinnedMesh("models/boi/Base.gltf", *boiMesh);
+	GLTF::LoadSkinnedMesh("models/jellyFish/JellyFish_Base.gltf", *boiMesh);
 
 	//Load our animation.
 	auto walkAnim = std::make_unique<SkeletalAnim>();
-	GLTF::LoadAnimation("models/boi/Walk.gltf", *(walkAnim.get()));
+	GLTF::LoadAnimation("models/jellyFish/JellyFish_Idle.gltf", *(walkAnim.get()));
 
 	//Make our camera...
 	Entity camEntity = Entity::Create();
@@ -88,6 +97,83 @@ int main()
 	//To spin our boi every frame. 
 	float anglePerSecond = 30.0f;
 
+	std::vector<std::function<void()>> imGuiCallbacks;
+	SkeletalAnimClip* boiEntityClip = boiEntity.Get<CAnimator>().GetClip();
+
+	//ImGui controls
+	imGuiCallbacks.push_back([&]() {
+
+		///Play-Stop Anim
+		ImGui::Text("Toggle Animation: ");
+		ImGui::SameLine();
+		if (!boiEntityClip->getIsPlaying())
+		{
+			if (ImGui::Button("Play Animation"))
+				boiEntityClip->setIsPlaying(true);
+		}
+		if (boiEntityClip->getIsPlaying())
+		{
+			if (ImGui::Button("Pause Animation"))
+				boiEntityClip->setIsPlaying(false);
+		}
+
+		///Loop?
+		ImGui::Text("Toggle Animation Loop: ");
+		ImGui::SameLine();
+		if (!boiEntityClip->getIsLooping())
+		{
+			if (ImGui::Button("Play Animation Once"))
+				boiEntityClip->setIsLooping(true);
+		}
+		if (boiEntityClip->getIsLooping())
+		{
+			if (ImGui::Button("Loop Animation"))
+				boiEntityClip->setIsLooping(false);
+		}
+
+		///Restart
+		ImGui::Text("Restart Animation: ");
+		ImGui::SameLine();
+		if (ImGui::Button("Restart"))
+			boiEntityClip->restartAnimClip();
+
+		if (ImGui::SliderFloat("Speed", &boiEntityClip->m_speed, 0.0f, 4.0f)) {
+
+		}
+
+		/*if (ImGui::CollapsingHeader("Scene Level Lighting Settings"))
+		{
+			if (ImGui::ColorPicker3("Ambient Color", glm::value_ptr(ambientCol))) {
+				shader->SetUniform("u_AmbientCol", ambientCol);
+			}
+			if (ImGui::SliderFloat("Fixed Ambient Power", &ambientPow, 0.01f, 1.0f)) {
+				shader->SetUniform("u_AmbientStrength", ambientPow);
+			}
+		}
+		if (ImGui::CollapsingHeader("Light Level Lighting Settings"))
+		{
+			if (ImGui::SliderFloat3("Light Pos", glm::value_ptr(lightPos), -10.0f, 10.0f)) {
+				shader->SetUniform("u_LightPos", lightPos);
+			}
+			if (ImGui::ColorPicker3("Light Col", glm::value_ptr(lightCol))) {
+				shader->SetUniform("u_LightCol", lightCol);
+			}
+			if (ImGui::SliderFloat("Light Ambient Power", &lightAmbientPow, 0.0f, 1.0f)) {
+				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow);
+			}
+			if (ImGui::SliderFloat("Light Specular Power", &lightSpecularPow, 0.0f, 1.0f)) {
+				shader->SetUniform("u_SpecularLightStrength", lightSpecularPow);
+			}
+		}
+		if (ImGui::CollapsingHeader("Material Level Lighting Settings"))
+		{
+			if (ImGui::SliderFloat("Shininess", &shininess, 0.1f, 128.0f)) {
+				shader->SetUniform("u_Shininess", shininess);
+			}
+		}*/
+		
+	});
+
 	App::Tick();
 
 	while (!App::IsClosing() && !Input::GetKey(GLFW_KEY_ESCAPE))
@@ -107,11 +193,14 @@ int main()
 		boiEntity.Get<CAnimator>().Update(deltaTime);
 		boiEntity.Get<CSkinnedMeshRenderer>().Draw();
 
+		/*if (isRestart)
+			isRestart = false;*/
+
 		//As a debug utility/demo: Draw our joints.
 		glDisable(GL_DEPTH_TEST); 
 
 		auto& jointTransform = jointEntity.transform;
-
+		
 		glm::vec3 scale, skew;
 		glm::vec4 persp;
 
@@ -129,13 +218,25 @@ int main()
 			jointTransform.RecomputeGlobal();
 			jointEntity.Get<CMeshRenderer>().Draw();
 		}
+
+		
 		
 		glEnable(GL_DEPTH_TEST);
+
 
 		App::StartImgui();
 
 		//Put any ImGUI code you need in here.
 		//(Don't forget to call Imgui::Begin and Imgui::End!)
+		if(ImGui::Begin("Animation Controller")) {
+			// Render our GUI stuff
+			for (auto& func : imGuiCallbacks) {
+				func();
+			}
+			ImGui::End();
+		}
+
+		
 
 		App::EndImgui();
 

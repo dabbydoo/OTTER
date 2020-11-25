@@ -19,7 +19,7 @@ out Vertex
 {
     float size;
     vec4 color;
-} v;
+}                                                                                                                                                                                                                                                                  ;
 
 void main()
 {

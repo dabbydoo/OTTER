@@ -64,8 +64,22 @@ namespace nou
 		//Apply the output of this node to a skeleton.
 		void Apply(Skeleton& skeleton);
 
+		void setIsPlaying(bool isPlaying);
+		void setIsLooping(bool isLooping);
+
+		bool getIsPlaying();
+		bool getIsLooping();
+		float getSpeed();
+
+		void restartAnimClip();
+
+		float m_speed = 1;
+
 		protected:
 
+		bool m_isLooping = false;
+		bool m_isPlaying = false;
+		
 		//Our local timer.
 		float m_timer;
 		//The data for our animation clip.

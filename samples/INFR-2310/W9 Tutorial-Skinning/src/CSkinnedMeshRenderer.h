@@ -22,7 +22,7 @@ namespace nou
 	{
 		public:
 
-		static const int MAX_NUM_JOINTS = 64;
+		static const int MAX_NUM_JOINTS = 128;
 
 		struct JointMatrices
 		{

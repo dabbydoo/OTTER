@@ -52,26 +52,34 @@ namespace nou
 
 	void SkeletalAnimClip::Update(float deltaTime, const Skeleton& skeleton)
 	{
-		//Update our timer - if we have a time to work off of.
-		if (m_anim.duration != 0.0f)
+		if (getIsPlaying())
 		{
-			m_timer += deltaTime;
-
-			//Should we loop over to the beginning?
-			if (m_timer > m_anim.duration)
+			//Update our timer - if we have a time to work off of.
+			if (m_anim.duration != 0.0f)
 			{
-				std::fill(m_rotFrame.begin(), m_rotFrame.end(), 0);
-				std::fill(m_posFrame.begin(), m_posFrame.end(), 0);
+				m_timer += deltaTime * m_speed;
+
+				//Should we loop over to the beginning?
+				if (m_timer > m_anim.duration)
+				{
+					std::fill(m_rotFrame.begin(), m_rotFrame.end(), 0);
+					std::fill(m_posFrame.begin(), m_posFrame.end(), 0);
+
+					if (!getIsLooping())
+					{
+						setIsPlaying(false);
+					}
+				}
+
+				while (m_timer > m_anim.duration)
+					m_timer -= m_anim.duration;	
 			}
-
-			while (m_timer > m_anim.duration)
-				m_timer -= m_anim.duration;
+			
+			//Interpolate joint rotations.
+			UpdateRotations();
+			//Interpolate joint positions.
+			UpdatePositions();
 		}
-
-		//Interpolate joint rotations.
-		UpdateRotations();
-		//Interpolate joint positions.
-		UpdatePositions();
 	}
 
 	void SkeletalAnimClip::Apply(Skeleton& skeleton)
@@ -83,6 +91,44 @@ namespace nou
 			joint.m_pos = m_result[i].pos;
 			joint.m_rotation = m_result[i].rotation;
 		}
+	}
+
+	void SkeletalAnimClip::setIsPlaying(bool isPlaying)
+	{
+		m_isPlaying = isPlaying;
+	}
+
+	void SkeletalAnimClip::setIsLooping(bool isLooping)
+	{
+		m_isLooping = isLooping;
+	}
+
+	bool SkeletalAnimClip::getIsPlaying()
+	{
+		return m_isPlaying;
+	}
+
+	bool SkeletalAnimClip::getIsLooping()
+	{
+		return m_isLooping;
+	}
+
+	float SkeletalAnimClip::getSpeed()
+	{
+		return m_speed;
+	}
+
+	void SkeletalAnimClip::restartAnimClip()
+	{
+		m_timer = 0;
+
+		std::fill(m_rotFrame.begin(), m_rotFrame.end(), 0);
+		std::fill(m_posFrame.begin(), m_posFrame.end(), 0);
+
+		//Interpolate joint rotations.
+		UpdateRotations();
+		//Interpolate joint positions.
+		UpdatePositions();
 	}
 
 	void SkeletalAnimClip::UpdatePositions()
@@ -137,6 +183,8 @@ namespace nou
 
 	void SkeletalAnimClip::UpdateRotations()
 	{
+		
+
 		for (size_t i = 0; i < m_anim.data.size(); ++i)
 		{
 			if (m_anim.data[i].rotFrames == 0)
@@ -164,6 +212,8 @@ namespace nou
 
 			size_t curFrame = m_rotFrame[i];
 			size_t nextFrame = m_rotFrame[i] + static_cast<size_t>(1);
+
+			
 
 			float start = m_anim.data[i].rotTimes[curFrame];
 			float end = m_anim.data[i].rotTimes[nextFrame];

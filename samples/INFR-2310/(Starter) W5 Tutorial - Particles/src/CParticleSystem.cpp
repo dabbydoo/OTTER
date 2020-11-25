@@ -154,7 +154,7 @@ namespace nou
 				continue;
 
 			m_data->lifetime[i] -= deltaTime;
-
+			
 			if (m_data->lifetime[i] <= 0.0f)
 			{
 				m_data->alive[i] = false;
